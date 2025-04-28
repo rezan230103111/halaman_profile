@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'profile_screen.dart';
+import 'login_screen.dart'; // Pastikan file ini ada
+import 'profile_screen.dart'; // Pastikan file ini juga ada
 
 void main() {
   runApp(const MyApp());
@@ -10,9 +11,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: ProfileScreen(),
+      title: 'Login App',
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        primarySwatch: Colors.cyan,
+      ),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const LoginScreen(),
+        '/profile': (context) => const ProfileScreen(),
+      },
     );
   }
 }

@@ -1,23 +1,53 @@
 import 'package:flutter/material.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  bool temaDark = true; // Awal tema dark
+
+  void gantiTema() {
+    setState(() {
+      temaDark = !temaDark;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: temaDark ? Colors.black : Colors.white,
+      appBar: AppBar(
+        title: const Text('Profile'),
+        backgroundColor: temaDark ? Colors.black : Colors.white,
+        elevation: 0,
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(
+              temaDark ? Icons.wb_sunny : Icons.nightlight_round,
+              color: temaDark ? Colors.white : Colors.black,
+            ),
+            onPressed: gantiTema, // Panggil fungsi ganti tema
+          ),
+        ],
+      ),
       body: Stack(
         children: [
           SafeArea(
             child: Column(
               children: [
+                const IconRow(),
+
                 const SizedBox(height: 10),
-                const Center(
+                Center(
                   child: Text(
                     '@ Rezan',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: temaDark ? Colors.white : Colors.black,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
@@ -40,94 +70,144 @@ class ProfileScreen extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: Colors.cyan,
                           shape: BoxShape.circle,
-                          border: Border.all(color: Colors.black, width: 2),
+                          border: Border.all(
+                            color: temaDark ? Colors.black : Colors.white,
+                            width: 2,
+                          ),
                         ),
                       ),
                     )
                   ],
                 ),
                 const SizedBox(height: 10),
-                const Text(
-                  '@ Zannn',
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                ),
+                username(),
                 const SizedBox(height: 20),
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ProfileStat(value: '256', label: 'Following'),
-                    ProfileStat(value: '256.7K', label: 'Followers'),
-                    ProfileStat(value: '5.2M', label: 'Likes'),
-                  ],
-                ),
+                follower(),
                 const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: Colors.white),
-                        foregroundColor: Colors.white,
-                      ),
-                      onPressed: () {},
-                      child: const Text('Edit profile'),
-                    ),
-                    const SizedBox(width: 10),
-                    OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        side: const BorderSide(color: Colors.white),
-                        foregroundColor: Colors.white,
-                      ),
-                      onPressed: () {},
-                      child: const Text('Share profile'),
-                    ),
-                    const SizedBox(width: 10),
-                    const Icon(Icons.person_add_alt, color: Colors.white),
-                  ],
-                ),
+                edit(),
                 const SizedBox(height: 10),
-                const Text('230103111', style: TextStyle(color: Colors.white54)),
+                bio(),
                 const SizedBox(height: 20),
-                const Divider(color: Colors.white24),
+                Divider(color: temaDark ? Colors.white24 : Colors.black26),
                 const SizedBox(height: 10),
                 const IconRow(),
                 const SizedBox(height: 10),
                 Expanded(
-                  child: GridView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    itemCount: 6,
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      crossAxisSpacing: 8,
-                      mainAxisSpacing: 8,
-                    ),
-                    itemBuilder: (context, index) {
-                      // ignore: unused_local_variable
-                      final images = [
-                    'images/foto 1.jpg',
-                    'images/foto 2.jpg',
-                    'images/foto 3.jpg',
-                    'images/foto 4.jpg',
-                    'images/foto5.jpg',
-                    'images/foto6.jpg',
-                  ];
-                    return Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(images[index]),
-                        fit: BoxFit.cover,
-                      ),
-                      borderRadius: BorderRadius.circular(8),
-                      color: Colors.grey[800],
-                    ),
-                  );
-                    },
-                  ),
-                )
+                  child: galery(),
+                ),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  GridView galery() {
+    final images = [
+      'images/foto 1.jpg',
+      'images/foto 2.jpg',
+      'images/foto 3.jpg',
+      'images/foto 4.jpg',
+      'images/foto5.jpg',
+      'images/foto6.jpg',
+    ];
+
+    return GridView.builder(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      itemCount: images.length,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 8,
+      ),
+      itemBuilder: (context, index) {
+        return Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(images[index]),
+              fit: BoxFit.cover,
+            ),
+            borderRadius: BorderRadius.circular(8),
+            color: Colors.grey[800],
+          ),
+        );
+      },
+    );
+  }
+
+  Text bio() => Text(
+        '230103111',
+        style: TextStyle(
+          color: temaDark ? Colors.white54 : Colors.black54,
+        ),
+      );
+
+  Row edit() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        OutlinedButton(
+          style: OutlinedButton.styleFrom(
+            side: BorderSide(color: temaDark ? Colors.white : Colors.black),
+            foregroundColor: temaDark ? Colors.white : Colors.black,
+          ),
+          onPressed: () {},
+          child: const Text('Edit profile'),
+        ),
+        const SizedBox(width: 10),
+        OutlinedButton(
+          style: OutlinedButton.styleFrom(
+            side: BorderSide(color: temaDark ? Colors.white : Colors.black),
+            foregroundColor: temaDark ? Colors.white : Colors.black,
+          ),
+          onPressed: () {},
+          child: const Text('Share profile'),
+        ),
+        const SizedBox(width: 10),
+        Icon(Icons.person_add_alt, color: temaDark ? Colors.white : Colors.black),
+      ],
+    );
+  }
+
+  Row follower() {
+    return const Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        ProfileStat(value: '256', label: 'Following'),
+        ProfileStat(value: '256.7K', label: 'Followers'),
+        ProfileStat(value: '5.2M', label: 'Likes'),
+      ],
+    );
+  }
+
+  Text username() {
+    return Text(
+      '@ Zannn',
+      style: TextStyle(
+        color: temaDark ? Colors.white : Colors.black,
+        fontSize: 16,
+      ),
+    );
+  }
+}
+
+class Bakso extends StatelessWidget {
+  const Bakso({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      style: const TextStyle(color: Colors.white),
+      decoration: const InputDecoration(
+        hintText: 'Edit bio...',
+        hintStyle: TextStyle(color: Colors.white54),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.white24),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.cyan),
+        ),
       ),
     );
   }
@@ -145,11 +225,18 @@ class ProfileStat extends StatelessWidget {
       children: [
         Text(
           value,
-          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
         ),
         Text(
           label,
-          style: const TextStyle(color: Colors.white70, fontSize: 12),
+          style: const TextStyle(
+            color: Colors.white70,
+            fontSize: 12,
+          ),
         ),
       ],
     );
